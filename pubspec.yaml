@@ -1,0 +1,44 @@
+name: app_1
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  shared_preferences: ^2.0.15
+  # UI & Icons
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.1.0          # Custom fonts
+
+  # Charts for dashboard
+  fl_chart: ^1.0.0             # Line and pie charts
+
+  # Networking & images
+  http: ^1.4.0                  # HTTP client for REST calls
+  cached_network_image: ^3.3.1 # For optimized image loading
+
+  # Carousel slider (used elsewhere)
+  carousel_slider: ^5.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/slide1.jpg
+    - assets/                  # Includes all other images in this folder
+
+  # Uncomment and configure fonts if you’re using any custom fonts
+  # fonts:
+  #   - family: YourCustomFont
+  #     fonts:
+  #       - asset: fonts/YourCustomFont-Regular.ttf
