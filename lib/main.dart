@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'HomePage.dart';
 import 'SignUpPage.dart';
 import 'FrontPage.dart';
-
+import 'user_cart.dart'; // Imports CartModel and CartPage
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => CartModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Icon(
                   Icons.shopping_cart,
                   size: 80,
-                color: Colors.deepPurple,
+                  color: Colors.deepPurple,
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -83,8 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _emailController,
                         hintText: 'Email',
                         icon: Icons.email,
-                        validator: (value) =>
-                            value == null || !value.contains('@')
+                        validator: (value) => value == null || !value.contains('@')
                             ? 'Enter a valid email'
                             : null,
                       ),
@@ -110,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         onPressed: _login,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 120, 78, 194),
+                          backgroundColor: const Color.fromARGB(255, 120, 78, 194),
                           minimumSize: const Size.fromHeight(50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -133,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                                 MaterialPageRoute(
                                   builder: (context) => const SignUpPage(),
                                 ),
-                              ); // Add signup navigation later
+                              );
                             },
                             child: const Text(
                               "Sign Up",
@@ -177,8 +184,8 @@ class _LoginPageState extends State<LoginPage> {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(16),
         ),
-        validator: validator,
-      ),
-    );
-  } 
+      validator: validator,
+     ),
+);
+}
 }

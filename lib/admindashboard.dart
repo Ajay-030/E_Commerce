@@ -10,9 +10,9 @@ class AdminApp extends StatelessWidget {
       title: 'Admin Dashboard',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        appBarTheme: AppBarTheme(backgroundColor: Colors.deepPurple),
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.deepPurple),
       ),
-      home: DashboardScreen(),
+      home: const DashboardScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -26,11 +26,11 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DrawerMenu(),
+      drawer: const DrawerMenu(),
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -86,7 +86,7 @@ class DrawerMenu extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(color: Colors.deepPurple),
             child: Text(
               'Admin Panel',
@@ -94,23 +94,23 @@ class DrawerMenu extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('Orders'),
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text('Orders'),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
-            leading: Icon(Icons.store),
-            title: Text('Products'),
+            leading: const Icon(Icons.store),
+            title: const Text('Products'),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Customers'),
+            leading: const Icon(Icons.people),
+            title: const Text('Customers'),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
-            leading: Icon(Icons.bar_chart),
-            title: Text('Reports'),
+            leading: const Icon(Icons.bar_chart),
+            title: const Text('Reports'),
             onTap: () => Navigator.pop(context),
           ),
         ],
@@ -142,7 +142,7 @@ class InfoCard extends StatelessWidget {
 
     return Container(
       width: cardWidth,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
@@ -152,15 +152,15 @@ class InfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             title,
             style: TextStyle(color: color, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ],
       ),
@@ -183,19 +183,19 @@ class ChartPlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey.shade300)],
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: LineChart(
         LineChartData(
           borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(show: true),
+          titlesData: const FlTitlesData(show: true),
           lineBarsData: [
             LineChartBarData(
               spots: [
-                FlSpot(1, 100),
-                FlSpot(2, 150),
-                FlSpot(3, 130),
-                FlSpot(4, 170),
-                FlSpot(5, 200),
+                const FlSpot(1, 100),
+                const FlSpot(2, 150),
+                const FlSpot(3, 130),
+                const FlSpot(4, 170),
+                const FlSpot(5, 200),
               ],
               isCurved: true,
               barWidth: 3,
@@ -224,7 +224,7 @@ class PieChartPlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey.shade300)],
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: PieChart(
         PieChartData(
           sections: [
@@ -233,7 +233,7 @@ class PieChartPlaceholder extends StatelessWidget {
               value: 50,
               title: 'Direct',
               radius: 70,
-              titleStyle: TextStyle(
+              titleStyle: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -245,7 +245,7 @@ class PieChartPlaceholder extends StatelessWidget {
               value: 5.4,
               title: 'Referral',
               radius: 70,
-              titleStyle: TextStyle(
+              titleStyle: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -258,7 +258,7 @@ class PieChartPlaceholder extends StatelessWidget {
               value: 44.6,
               title: 'Organic',
               radius: 70,
-              titleStyle: TextStyle(
+              titleStyle: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
