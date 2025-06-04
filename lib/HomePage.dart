@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:app_1/user_myorder.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import 'user_cart.dart';
+import 'user_account.dart';
 
 void main() => runApp(const ECommerceApp());
 
@@ -14,10 +16,7 @@ class ECommerceApp extends StatelessWidget {
     return MaterialApp(
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-        primarySwatch: Colors.deepPurple,
-      ),
+      theme: ThemeData(fontFamily: 'Roboto', primarySwatch: Colors.deepPurple),
     );
   }
 }
@@ -55,7 +54,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": true,
       "isNewArrival": false,
-      "sales": 450
+      "sales": 450,
     },
     {
       "name": "Cotton Kurthi",
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 210
+      "sales": 210,
     },
     {
       "name": "Printed Kurthi",
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": true,
       "isNewArrival": false,
-      "sales": 380
+      "sales": 380,
     },
     {
       "name": "Silk Kurthi",
@@ -94,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Ethnic Sets",
       "isBestSeller": true,
       "isNewArrival": false,
-      "sales": 520
+      "sales": 520,
     },
     {
       "name": "Embellished Kurthi",
@@ -107,7 +106,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Wedding collections",
       "isBestSeller": true,
       "isNewArrival": false,
-      "sales": 410
+      "sales": 410,
     },
 
     // New Arrivals
@@ -122,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Wedding collections",
       "isBestSeller": false,
       "isNewArrival": true,
-      "sales": 120
+      "sales": 120,
     },
     {
       "name": "Floral Print Kurthi",
@@ -135,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": true,
-      "sales": 85
+      "sales": 85,
     },
     {
       "name": "Georgette Kurthi",
@@ -148,7 +147,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": true,
-      "sales": 95
+      "sales": 95,
     },
     {
       "name": "Anarkali Kurthi",
@@ -161,7 +160,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Ethnic Sets",
       "isBestSeller": false,
       "isNewArrival": true,
-      "sales": 110
+      "sales": 110,
     },
 
     // Regular Products
@@ -176,7 +175,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 210
+      "sales": 210,
     },
     {
       "name": "Chic Kurthi",
@@ -189,7 +188,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 180
+      "sales": 180,
     },
     {
       "name": "Embroidered Kurthi",
@@ -202,7 +201,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 240
+      "sales": 240,
     },
     {
       "name": "Cotton Floral Kurthi",
@@ -215,7 +214,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 195
+      "sales": 195,
     },
     {
       "name": "Denim Kurthi",
@@ -228,7 +227,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Fusion wear",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 160
+      "sales": 160,
     },
     {
       "name": "Chanderi Silk Kurthi",
@@ -241,7 +240,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Ethnic Sets",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 220
+      "sales": 220,
     },
     {
       "name": "Batik Print Kurthi",
@@ -254,7 +253,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 175
+      "sales": 175,
     },
     {
       "name": "Kalamkari Kurthi",
@@ -267,7 +266,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Ethnic Sets",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 290
+      "sales": 290,
     },
     {
       "name": "Bandhani Kurthi",
@@ -280,7 +279,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 210
+      "sales": 210,
     },
     {
       "name": "Lehenga Style Kurthi",
@@ -293,7 +292,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Wedding collections",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 180
+      "sales": 180,
     },
     {
       "name": "Kashmiri Kurthi",
@@ -306,7 +305,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Kurta & Kurti",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 160
+      "sales": 160,
     },
     {
       "name": "Patchwork Kurthi",
@@ -319,7 +318,7 @@ class _HomePageState extends State<HomePage> {
       "category": "Fusion wear",
       "isBestSeller": false,
       "isNewArrival": false,
-      "sales": 140
+      "sales": 140,
     },
   ];
 
@@ -358,7 +357,8 @@ class _HomePageState extends State<HomePage> {
       _filteredProducts = allProducts.where((product) {
         final price = (product['price'] as int).toDouble();
         final matchesCategory =
-            _selectedCategory == 'All' || product['category'] == _selectedCategory;
+            _selectedCategory == 'All' ||
+            product['category'] == _selectedCategory;
         final matchesPrice = price >= _minPrice && price <= _maxPrice;
         final matchesStock = !_inStockOnly || product['available'];
 
@@ -374,7 +374,9 @@ class _HomePageState extends State<HomePage> {
           _filteredProducts.sort((a, b) => b['price'].compareTo(a['price']));
           break;
         case 'Highest Discount':
-          _filteredProducts.sort((a, b) => b['discount'].compareTo(a['discount']));
+          _filteredProducts.sort(
+            (a, b) => b['discount'].compareTo(a['discount']),
+          );
           break;
         case 'Highest Rated':
           _filteredProducts.sort((a, b) => b['rating'].compareTo(a['rating']));
@@ -439,7 +441,10 @@ class _HomePageState extends State<HomePage> {
                       top: 8,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(10),
@@ -459,7 +464,10 @@ class _HomePageState extends State<HomePage> {
                       bottom: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.deepPurple,
                           borderRadius: BorderRadius.circular(10),
@@ -479,7 +487,10 @@ class _HomePageState extends State<HomePage> {
                       bottom: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(10),
@@ -503,7 +514,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(product['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  product['name'],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   "₹${(product['price'] * (1 - product['discount'] / 100)).round()}",
@@ -530,7 +544,9 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ...List.generate(5, (star) {
                       return Icon(
-                        star < product['rating'].floor() ? Icons.star : Icons.star_border,
+                        star < product['rating'].floor()
+                            ? Icons.star
+                            : Icons.star_border,
                         size: 16,
                         color: Colors.orange,
                       );
@@ -538,22 +554,22 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(width: 4),
                     Text(
                       "(${product['sales']})",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildProductSection(String title, List<Map<String, dynamic>> products) {
+  Widget _buildProductSection(
+    String title,
+    List<Map<String, dynamic>> products,
+  ) {
     if (products.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -563,10 +579,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
           child: Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
@@ -609,22 +622,28 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 10),
 
                   // Category Filter
-                  const Text('Category', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Category',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   DropdownButton<String>(
                     value: _selectedCategory,
                     isExpanded: true,
-                    items: [
-                      'All',
-                      'Kurta & Kurti',
-                      'Ethnic Sets',
-                      'Fusion wear',
-                      'Wedding collections'
-                    ]
-                        .map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'All',
+                              'Kurta & Kurti',
+                              'Ethnic Sets',
+                              'Fusion wear',
+                              'Wedding collections',
+                            ]
+                            .map(
+                              (category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       setModalState(() {
                         _selectedCategory = value!;
@@ -635,7 +654,10 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
 
                   // Price Range Filter
-                  const Text('Price Range', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Price Range',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   RangeSlider(
                     values: RangeValues(_minPrice, _maxPrice),
                     min: 0,
@@ -737,12 +759,12 @@ class _HomePageState extends State<HomePage> {
                 'Price: High to Low',
                 'Highest Discount',
                 'Highest Rated',
-                'Best Selling'
+                'Best Selling',
               ].map((option) {
                 return ListTile(
                   title: Text(option),
                   trailing: _sortBy == option
-                      ? const Icon(Icons.check, color: Colors.deepPurple)
+                      ? const Icon(Icons.check, color: Color.fromARGB(255, 243, 240, 248))
                       : null,
                   onTap: () {
                     setState(() {
@@ -779,10 +801,15 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
                 decoration: const BoxDecoration(
                   color: Colors.deepPurple,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                  ),
                 ),
                 child: const Text(
                   "Categories",
@@ -890,8 +917,10 @@ class _HomePageState extends State<HomePage> {
                       itemCount: carouselImages.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.asset(
@@ -909,8 +938,10 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -960,8 +991,9 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Chip(
-                          label:
-                              Text('₹${_minPrice.toInt()}-₹${_maxPrice.toInt()}'),
+                          label: Text(
+                            '₹${_minPrice.toInt()}-₹${_maxPrice.toInt()}',
+                          ),
                           onDeleted: () {
                             setState(() {
                               _minPrice = 0;
@@ -992,10 +1024,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
                   "All Products",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -1009,7 +1038,11 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(32.0),
                           child: Column(
                             children: [
-                              Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
+                              Icon(
+                                Icons.search_off,
+                                size: 60,
+                                color: Colors.grey[400],
+                              ),
                               const SizedBox(height: 16),
                               const Text(
                                 "No products match your filters",
@@ -1035,19 +1068,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                   : SliverGrid(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return _buildProductCard(_filteredProducts[index]);
-                        },
-                        childCount: _filteredProducts.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return _buildProductCard(_filteredProducts[index]);
+                      }, childCount: _filteredProducts.length),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 0.65,
-                      ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.65,
+                          ),
                     ),
             ),
           ],
@@ -1061,8 +1091,14 @@ class _HomePageState extends State<HomePage> {
         onTap: _onBottomNavTap,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: "Offers"),
-          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: "Trending"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_business_outlined),
+            label: "Orders",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_up),
+            label: "Trending",
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
         ],
@@ -1071,10 +1107,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onBottomNavTap(int index) {
-    if (index == 3) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyShopApp()),
+      );
+    } else if (index == 3) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const CartPage()),
+      );
+    } else if (index == 4) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AccountPage(
+            changeThemeMode: (mode) {}, // Optional placeholder
+            currentThemeMode: ThemeMode.system,
+          ),
+        ),
       );
     } else {
       setState(() {
@@ -1116,7 +1167,8 @@ class DrawerCategoryItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            if (isSelected) const Icon(Icons.check, color: Colors.deepPurple, size: 20),
+            if (isSelected)
+              const Icon(Icons.check, color: Colors.deepPurple, size: 20),
             if (isSelected) const SizedBox(width: 8),
             Text(
               title,
@@ -1186,7 +1238,10 @@ class ProductDetailPage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         leading: const CircleAvatar(child: Icon(Icons.person)),
-        title: Text(userName, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          userName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1234,11 +1289,16 @@ class ProductDetailPage extends StatelessWidget {
             children: [
               CarouselSlider(
                 items: imageList
-                    .map((item) => ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(item,
-                              fit: BoxFit.cover, width: double.infinity),
-                        ))
+                    .map(
+                      (item) => ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          item,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
+                    )
                     .toList(),
                 options: CarouselOptions(
                   height: 250,
@@ -1251,7 +1311,10 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 name,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 10),
               Row(
@@ -1367,32 +1430,43 @@ class ProductDetailPage extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 8),
-              userReview("Priya Sharma", "Loved the fabric and fit! Perfect for summer wear.", 5),
-              userReview("Rahul Patel", "Good quality but the color was slightly different than shown.", 4),
-              userReview("Neha Gupta", "Excellent stitching and finish. Worth the price!", 5),
+              userReview(
+                "Priya Sharma",
+                "Loved the fabric and fit! Perfect for summer wear.",
+                5,
+              ),
+              userReview(
+                "Rahul Patel",
+                "Good quality but the color was slightly different than shown.",
+                4,
+              ),
+              userReview(
+                "Neha Gupta",
+                "Excellent stitching and finish. Worth the price!",
+                5,
+              ),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                 onPressed: () {
-  Provider.of<CartModel>(context, listen: false).addItem(
-    CartItem(
-      id: name,
-      name: name,
-      category: 'Kurthi', // adjust if dynamic
-      price: (price * (1 - discount / 100)).toDouble(),
-      imageUrl: imageList.first,
-    ),
-  );
+                  onPressed: () {
+                    Provider.of<CartModel>(context, listen: false).addItem(
+                      CartItem(
+                        id: name,
+                        name: name,
+                        category: 'Kurthi', // adjust if dynamic
+                        price: (price * (1 - discount / 100)).toDouble(),
+                        imageUrl: imageList.first,
+                      ),
+                    );
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text("$name added to cart"),
-      duration: const Duration(seconds: 1),
-    ),
-  );
-},
-
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("$name added to cart"),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,

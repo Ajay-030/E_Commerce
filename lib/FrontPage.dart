@@ -45,20 +45,19 @@ class _FrontPageState extends State<FrontPage>
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // Background Image
+              // Gradient Background
               Container(
                 decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/landingimage2.jpg',
-                    ), // Replace with your image
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFFF3EFFF), // Light purple top
+                      Color(0xFFE6DFFF), // Slightly darker bottom
+                    ],
                   ),
                 ),
               ),
-
-              // Dark overlay for transparency effect
-              Container(color: Colors.black.withOpacity(0.4)),
 
               // Main Login Card
               Center(
@@ -83,7 +82,7 @@ class _FrontPageState extends State<FrontPage>
                       const Icon(
                         Icons.shopping_bag,
                         size: 70,
-                        color: Colors.white,
+                        color: Colors.deepPurple,
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -91,7 +90,7 @@ class _FrontPageState extends State<FrontPage>
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -99,7 +98,7 @@ class _FrontPageState extends State<FrontPage>
                         'Your one-stop destination for style & trends',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
-                          color: Colors.white70,
+                          color: Colors.black54,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -200,7 +199,7 @@ class _AnimatedGradientButtonState extends State<_AnimatedGradientButton> {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: const Color.fromARGB(255, 244, 244, 246),
             ),
           ),
         ),
