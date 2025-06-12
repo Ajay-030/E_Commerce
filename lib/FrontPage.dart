@@ -12,6 +12,7 @@ class FrontPage extends StatefulWidget {
 
 class _FrontPageState extends State<FrontPage>
     with SingleTickerProviderStateMixin {
+      
   late AnimationController _controller;
   late Animation<double> _fadeIn;
 

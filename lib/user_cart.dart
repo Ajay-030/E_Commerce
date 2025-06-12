@@ -1,3 +1,6 @@
+import 'package:app_1/HomePage.dart';
+import 'package:app_1/user_account.dart';
+import 'package:app_1/user_myorder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,10 +9,10 @@ class CartItem {
   final String name;
   final String category;
   final double price;
-  final double originalPrice; // Added for showing discounts
+  final double originalPrice;
   final String imageUrl;
   int quantity;
-  bool isSelected; // Added for selectable items
+  bool isSelected;
 
   CartItem({
     required this.id,
@@ -22,33 +25,30 @@ class CartItem {
     this.isSelected = true,
   });
 
-  double get discount => originalPrice > 0
-      ? ((originalPrice - price) / originalPrice * 100)
-      : 0;
+  double get discount =>
+      originalPrice > 0 ? ((originalPrice - price) / originalPrice * 100) : 0;
 }
 
 class CartModel with ChangeNotifier {
   final List<CartItem> _items = [];
 
   List<CartItem> get items => _items;
-
-  List<CartItem> get selectedItems =>
-      _items.where((item) => item.isSelected).toList();
-
+  List<CartItem> get selectedItems => _items.where((item) => item.isSelected).toList();
   int get itemCount => _items.length;
-
   int get selectedItemCount => selectedItems.length;
 
   double get subtotal {
     return selectedItems.fold(
-        0, (sum, item) => sum + (item.price * item.quantity));
+      0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
   }
 
   double get totalSavings {
     return _items.fold(
-        0,
-        (sum, item) =>
-            sum + ((item.originalPrice - item.price) * item.quantity));
+      0,
+      (sum, item) => sum + ((item.originalPrice - item.price) * item.quantity),
+    );
   }
 
   bool get allItemsSelected =>
@@ -101,8 +101,6 @@ class CartModel with ChangeNotifier {
   }
 
   void saveForLater(String id) {
-    // Implement save for later functionality
-    // You might want to move the item to a separate list
     notifyListeners();
   }
 }
@@ -123,22 +121,35 @@ class _CartPageState extends State<CartPage> {
       _selectedIndex = index;
     });
 
-    // Handle navigation here (example placeholders)
     switch (index) {
       case 0:
-        Navigator.pop(context); // Simulate going back to Home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
         break;
       case 1:
-        // Navigate to Offers
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OrdersPage()),
+        );
         break;
       case 2:
-        // Navigate to Trending
+        // Handle Explore page navigation
         break;
       case 3:
-        // Already on Cart
+        // Already on Cart page
         break;
       case 4:
-        // Navigate to Account
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AccountPage(
+              changeThemeMode: (mode) {}, // Placeholder function
+              currentThemeMode: ThemeMode.system,
+            ),
+          ),
+        );
         break;
     }
   }
@@ -160,13 +171,13 @@ class _CartPageState extends State<CartPage> {
             IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: () {
-                // Show confirmation dialog
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Remove all items?'),
                     content: const Text(
-                        'Are you sure you want to remove all items from your cart?'),
+                      'Are you sure you want to remove all items from your cart?',
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
@@ -177,8 +188,10 @@ class _CartPageState extends State<CartPage> {
                           cart.toggleAllItemsSelection(false);
                           Navigator.pop(context);
                         },
-                        child: const Text('REMOVE',
-                            style: TextStyle(color: Colors.red)),
+                        child: const Text(
+                          'REMOVE',
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                     ],
                   ),
@@ -188,25 +201,26 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
 
-      /// ─────────────────────────────────────────────────────────
-      /// BODY: only contains the “scrollable” part (banner + header + items list)
-      /// ─────────────────────────────────────────────────────────
       body: Column(
         children: [
-          // Delivery Banner (optional, only if subtotal < 300)
           if (cart.subtotal < 300)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.orange[50],
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline, color: Colors.orange, size: 18),
+                  const Icon(
+                    Icons.info_outline,
+                    color: Colors.orange,
+                    size: 18,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: RichText(
                       text: TextSpan(
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: Colors.orange[800]),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.orange[800],
+                        ),
                         children: [
                           const TextSpan(text: 'Add '),
                           TextSpan(
@@ -222,7 +236,6 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
 
-          // If cart is empty, show “Your cart is empty”
           if (cart.itemCount == 0)
             const Expanded(
               child: Center(
@@ -231,8 +244,11 @@ class _CartPageState extends State<CartPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.shopping_cart_outlined,
-                          size: 64, color: Colors.grey),
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 64,
+                        color: Colors.grey,
+                      ),
                       SizedBox(height: 16),
                       Text(
                         "Your cart is empty",
@@ -254,17 +270,16 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
             )
-
-          // Otherwise, show the scrollable list of items
           else
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Cart items header (select all / total savings)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 4),
+                        horizontal: 14,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: Colors.grey[300]!),
@@ -289,14 +304,14 @@ class _CartPageState extends State<CartPage> {
                           if (cart.totalSavings > 0)
                             Text(
                               'You save ₹${cart.totalSavings.toStringAsFixed(2)}',
-                              style: theme.textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.green),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.green,
+                              ),
                             ),
                         ],
                       ),
                     ),
 
-                    // Cart items list
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -312,14 +327,19 @@ class _CartPageState extends State<CartPage> {
                             alignment: Alignment.centerRight,
                             color: const Color.fromARGB(255, 202, 98, 98),
                             padding: const EdgeInsets.only(right: 20),
-                            child: const Icon(Icons.delete, color: Colors.white),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
                           secondaryBackground: Container(
                             alignment: Alignment.centerLeft,
                             color: Colors.blue,
                             padding: const EdgeInsets.only(left: 20),
-                            child:
-                                const Icon(Icons.bookmark, color: Colors.white),
+                            child: const Icon(
+                              Icons.bookmark,
+                              color: Colors.white,
+                            ),
                           ),
                           confirmDismiss: (direction) async {
                             if (direction == DismissDirection.endToStart) {
@@ -328,7 +348,8 @@ class _CartPageState extends State<CartPage> {
                                 builder: (context) => AlertDialog(
                                   title: const Text('Remove item?'),
                                   content: const Text(
-                                      'Do you want to remove this item from your cart?'),
+                                    'Do you want to remove this item from your cart?',
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
@@ -338,9 +359,10 @@ class _CartPageState extends State<CartPage> {
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(context, true),
-                                      child: const Text('REMOVE',
-                                          style:
-                                              TextStyle(color: Colors.red)),
+                                      child: const Text(
+                                        'REMOVE',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -364,7 +386,9 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 ListTile(
                                   contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 2),
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
                                   leading: Checkbox(
                                     value: item.isSelected,
                                     onChanged: (value) =>
@@ -382,8 +406,7 @@ class _CartPageState extends State<CartPage> {
                                         width: 64,
                                         height: 64,
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(6),
                                           image: DecorationImage(
                                             image: AssetImage(item.imageUrl),
                                             fit: BoxFit.contain,
@@ -399,8 +422,9 @@ class _CartPageState extends State<CartPage> {
                                             Text(
                                               item.name,
                                               style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize:  14),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -419,7 +443,7 @@ class _CartPageState extends State<CartPage> {
                                                       decoration: TextDecoration
                                                           .lineThrough,
                                                       color: Colors.grey,
-                                                      fontSize:  12,
+                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 6),
@@ -427,7 +451,7 @@ class _CartPageState extends State<CartPage> {
                                                     '${item.discount.toStringAsFixed(0)}% off',
                                                     style: const TextStyle(
                                                       color: Colors.green,
-                                                      fontSize:  12,
+                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                 ],
@@ -435,7 +459,7 @@ class _CartPageState extends State<CartPage> {
                                             Text(
                                               '₹${item.price.toStringAsFixed(2)}',
                                               style: const TextStyle(
-                                                fontSize:  16,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.deepPurple,
                                               ),
@@ -443,12 +467,16 @@ class _CartPageState extends State<CartPage> {
                                             if (item.quantity > 1)
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 2),
+                                                  top: 2,
+                                                ),
                                                 child: Text(
                                                   '₹${(item.price * item.quantity).toStringAsFixed(2)} for ${item.quantity}',
-                                                  style: theme.textTheme.bodySmall
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
                                                       ?.copyWith(
-                                                          color: Colors.grey),
+                                                        color: Colors.grey,
+                                                      ),
                                                 ),
                                               ),
                                           ],
@@ -461,8 +489,10 @@ class _CartPageState extends State<CartPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.more_vert,
-                                            size:  18),
+                                        icon: const Icon(
+                                          Icons.more_vert,
+                                          size: 18,
+                                        ),
                                         onPressed: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -471,9 +501,11 @@ class _CartPageState extends State<CartPage> {
                                               children: [
                                                 ListTile(
                                                   leading: const Icon(
-                                                      Icons.delete_outline),
-                                                  title:
-                                                      const Text('Remove item'),
+                                                    Icons.delete_outline,
+                                                  ),
+                                                  title: const Text(
+                                                    'Remove item',
+                                                  ),
                                                   onTap: () {
                                                     Navigator.pop(context);
                                                     cart.removeItem(item.id);
@@ -481,9 +513,11 @@ class _CartPageState extends State<CartPage> {
                                                 ),
                                                 ListTile(
                                                   leading: const Icon(
-                                                      Icons.bookmark_outline),
+                                                    Icons.bookmark_outline,
+                                                  ),
                                                   title: const Text(
-                                                      'Save for later'),
+                                                    'Save for later',
+                                                  ),
                                                   onTap: () {
                                                     Navigator.pop(context);
                                                     cart.saveForLater(item.id);
@@ -497,38 +531,43 @@ class _CartPageState extends State<CartPage> {
                                       Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey[300]!),
-                                          borderRadius:
-                                              BorderRadius.circular(4),
+                                            color: Colors.grey[300]!,
+                                          ),
+                                          borderRadius: BorderRadius.circular(4),
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.remove,
-                                                  size:  16),
-                                              onPressed: () =>
-                                                  cart.decrementQuantity(
-                                                      item.id),
+                                              icon: const Icon(
+                                                Icons.remove,
+                                                size: 16,
+                                              ),
+                                              onPressed: () => cart
+                                                  .decrementQuantity(item.id),
                                               padding: EdgeInsets.zero,
                                               constraints:
                                                   const BoxConstraints(),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 8),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                  ),
                                               child: Text(
                                                 item.quantity.toString(),
                                                 style: const TextStyle(
-                                                    fontSize:  12),
+                                                  fontSize: 12,
+                                                ),
                                               ),
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.add,
-                                                  size:  16),
-                                              onPressed: () =>
-                                                  cart.incrementQuantity(
-                                                      item.id),
+                                              icon: const Icon(
+                                                Icons.add,
+                                                size: 16,
+                                              ),
+                                              onPressed: () => cart
+                                                  .incrementQuantity(item.id),
                                               padding: EdgeInsets.zero,
                                               constraints:
                                                   const BoxConstraints(),
@@ -542,7 +581,10 @@ class _CartPageState extends State<CartPage> {
                                 if (!item.isSelected)
                                   Container(
                                     padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 6),
+                                      left: 16,
+                                      right: 16,
+                                      bottom: 6,
+                                    ),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       'Not selected for purchase',
@@ -556,9 +598,7 @@ class _CartPageState extends State<CartPage> {
                         );
                       },
                     ),
-
-                    // Extra bottom padding so the last item is never hidden by the bottomSheet
-                    const SizedBox(height:  80),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
@@ -566,10 +606,6 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
 
-      /// ─────────────────────────────────────────────────────────
-      /// BOTTOM SHEET: This is the “checkout” section, pinned to the bottom.
-      /// Because it is in bottomSheet, it won't cause overflow when expanded.
-      /// ─────────────────────────────────────────────────────────
       bottomSheet: cart.itemCount > 0
           ? Container(
               color: Colors.grey[50],
@@ -589,17 +625,18 @@ class _CartPageState extends State<CartPage> {
                     children: [
                       ExpansionPanel(
                         headerBuilder: (context, isExpanded) =>
-                            const ListTile(
-                          title: Text('Delivery'),
-                        ),
+                            const ListTile(title: Text('Delivery')),
                         body: Padding(
                           padding: const EdgeInsets.only(
-                              left: 16, right: 16, bottom: 16),
+                            left: 16,
+                            right: 16,
+                            bottom: 16,
+                          ),
                           child: Column(
                             children: [
                               const Row(
                                 children: [
-                                  Icon(Icons.location_on_outlined, size:  16),
+                                  Icon(Icons.location_on_outlined, size: 16),
                                   SizedBox(width: 6),
                                   Text('Deliver to: Home'),
                                 ],
@@ -623,8 +660,6 @@ class _CartPageState extends State<CartPage> {
                     ],
                   ),
                   const Divider(),
-
-                  // Subtotal row
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Row(
@@ -641,8 +676,6 @@ class _CartPageState extends State<CartPage> {
                       ],
                     ),
                   ),
-
-                  // Savings row (if any)
                   if (cart.totalSavings > 0)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
@@ -655,15 +688,14 @@ class _CartPageState extends State<CartPage> {
                           ),
                           Text(
                             '-₹${cart.totalSavings.toStringAsFixed(2)}',
-                            style: theme.textTheme.bodyMedium
-                                ?.copyWith(color: Colors.green),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.green,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   const Divider(),
-
-                  // Total amount + Place Order button
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Row(
@@ -671,13 +703,15 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         Text(
                           'Total Amount',
-                          style: theme.textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                           '₹${cart.subtotal.toStringAsFixed(2)}',
-                          style: theme.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -707,7 +741,7 @@ class _CartPageState extends State<CartPage> {
                       child: Text(
                         'PLACE ORDER${cart.selectedItemCount > 0 ? ' (${cart.selectedItemCount} ${cart.selectedItemCount == 1 ? 'ITEM' : 'ITEMS'})' : ''}',
                         style: const TextStyle(
-                          fontSize:  16,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -733,9 +767,9 @@ class _CartPageState extends State<CartPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_offer_outlined),
+            icon: Icon(Icons.add_business_outlined),
             activeIcon: Icon(Icons.local_offer),
-            label: 'Offers',
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),

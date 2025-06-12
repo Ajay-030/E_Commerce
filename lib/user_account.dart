@@ -1,4 +1,8 @@
+import 'package:app_1/user_cart.dart';
 import 'package:flutter/material.dart';
+import 'HomePage.dart';
+import 'user_cart.dart';
+import 'user_myorder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -92,19 +96,21 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AccountPage extends StatefulWidget {
-   final Function(ThemeMode) changeThemeMode;
+  final Function(ThemeMode) changeThemeMode;
   final ThemeMode currentThemeMode;
-  const AccountPage({super.key,
-   required this.changeThemeMode,
-    required this.currentThemeMode,});
+  
+  const AccountPage({
+    super.key,
+    required this.changeThemeMode,
+    required this.currentThemeMode,
+  });
 
   @override
   State<AccountPage> createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
-  // ignore: unused_field
-  final bool _darkModeEnabled = false;
+  int _currentIndex = 4; // Account page is selected
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +162,78 @@ class _AccountPageState extends State<AccountPage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onBottomNavTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_business_outlined),
+            activeIcon: Icon(Icons.add_business),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore_outlined),
+            activeIcon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            activeIcon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Account',
+          ),
+        ],
+      ),
     );
+  }
+
+  void _onBottomNavTap(int index) {
+    if (index == 4) return; // Already on current page
+    
+  setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 1:
+         Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => OrdersPage()),
+        );// Navigator to Orders page
+        break;
+      case 2:
+        // Navigator to Explore page
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CartPage()),
+        );
+        break;
+      case 4:
+        // Already on Account page
+        break;
+    }
   }
 }
 

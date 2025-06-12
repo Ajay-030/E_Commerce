@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import 'user_cart.dart';
+import 'checkout_page.dart';
 import 'user_account.dart';
-
+import 'wishlist_page.dart' hide MyShopApp;
+import 'category_drawer.dart';
 void main() => runApp(const ECommerceApp());
 
 class ECommerceApp extends StatelessWidget {
@@ -436,6 +438,22 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
+                  // Wishlist Icon Button
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.favorite_border_outlined,
+                        color: const Color.fromARGB(255, 177, 4, 196),
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        // Add to wishlist functionality
+                        _addToWishlist(product);
+                      },
+                    ),
+                  ),
                   if (product['discount'] > 15)
                     Positioned(
                       top: 8,
@@ -509,6 +527,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          // Rest of the product card code remains the same...
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -599,6 +618,21 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  void _addToWishlist(Map<String, dynamic> product) {
+    // Here you would typically add the product to your wishlist state management
+    // For now, we'll just show a snackbar to indicate the product was added
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${product['name']} added to wishlist'),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+
+    // In a real app, you would add the product to your wishlist state
+    // For example, if you're using Provider:
+    // Provider.of<WishlistModel>(context, listen: false).addItem(product);
   }
 
   void _showFilterDialog(BuildContext context) {
@@ -764,7 +798,10 @@ class _HomePageState extends State<HomePage> {
                 return ListTile(
                   title: Text(option),
                   trailing: _sortBy == option
-                      ? const Icon(Icons.check, color: Color.fromARGB(255, 243, 240, 248))
+                      ? const Icon(
+                          Icons.check,
+                          color: Color.fromARGB(255, 243, 240, 248),
+                        )
                       : null,
                   onTap: () {
                     setState(() {
@@ -788,105 +825,16 @@ class _HomePageState extends State<HomePage> {
     final newArrivals = allProducts.where((p) => p['isNewArrival']).toList();
 
     return Scaffold(
-      drawer: Drawer(
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF7F3FF),
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 24,
-                ),
-                decoration: const BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: const Text(
-                  "Categories",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(top: 0),
-                  children: [
-                    DrawerCategoryItem(
-                      title: "All",
-                      isSelected: _selectedCategory == 'All',
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = 'All';
-                          _applyFilters();
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    DrawerCategoryItem(
-                      title: "Ethnic Sets",
-                      isSelected: _selectedCategory == 'Ethnic Sets',
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = 'Ethnic Sets';
-                          _applyFilters();
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    DrawerCategoryItem(
-                      title: "Kurta & Kurti",
-                      isSelected: _selectedCategory == 'Kurta & Kurti',
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = 'Kurta & Kurti';
-                          _applyFilters();
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    DrawerCategoryItem(
-                      title: "Fusion wear",
-                      isSelected: _selectedCategory == 'Fusion wear',
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = 'Fusion wear';
-                          _applyFilters();
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    DrawerCategoryItem(
-                      title: "Wedding collections",
-                      isSelected: _selectedCategory == 'Wedding collections',
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = 'Wedding collections';
-                          _applyFilters();
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      drawer: CategoryDrawer(
+  selectedCategory: _selectedCategory,
+  onCategorySelected: (category) {
+    setState(() {
+      _selectedCategory = category;
+      _applyFilters();
+    });
+    Navigator.pop(context);
+  }, onLogout: () { Navigator.of(context).pushReplacementNamed('/login'); },
+),
       appBar: AppBar(
         title: const Text(
           "KurthiZone",
@@ -894,7 +842,15 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WishlistScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: Scrollbar(
@@ -1099,8 +1055,14 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.trending_up),
             label: "Trending",
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: "Cart"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: "Cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: "Account",
+          ),
         ],
       ),
     );
@@ -1135,55 +1097,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class DrawerCategoryItem extends StatelessWidget {
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
 
-  const DrawerCategoryItem({
-    super.key,
-    required this.title,
-    this.isSelected = false,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.deepPurple.withOpacity(0.1) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.15),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            if (isSelected)
-              const Icon(Icons.check, color: Colors.deepPurple, size: 20),
-            if (isSelected) const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: isSelected ? Colors.deepPurple : Colors.black,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class ProductDetailPage extends StatelessWidget {
   final String name;
@@ -1389,7 +1303,7 @@ class ProductDetailPage extends StatelessWidget {
                 children: sizes.split(', ').map((size) {
                   return ChoiceChip(
                     label: Text(size),
-                    selected: size == "M", // Default selected size
+                    selected: size == "M",
                     onSelected: (selected) {},
                   );
                 }).toList(),
@@ -1454,7 +1368,7 @@ class ProductDetailPage extends StatelessWidget {
                       CartItem(
                         id: name,
                         name: name,
-                        category: 'Kurthi', // adjust if dynamic
+                        category: 'Kurthi',
                         price: (price * (1 - discount / 100)).toDouble(),
                         imageUrl: imageList.first,
                       ),
@@ -1467,7 +1381,6 @@ class ProductDetailPage extends StatelessWidget {
                       ),
                     );
                   },
-
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1490,10 +1403,15 @@ class ProductDetailPage extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("$name added to wishlist"),
-                        duration: const Duration(seconds: 1),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutPage(
+                          productName: name,
+                          productPrice: discountedPrice,
+                          image: imageList.first,
+                          size: "M",
+                        ),
                       ),
                     );
                   },
