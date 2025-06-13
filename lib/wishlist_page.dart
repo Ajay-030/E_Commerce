@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'user_cart.dart';
 void main() {
   runApp(const MyShopApp());
 }
@@ -164,58 +164,56 @@ class _WishlistScreenState extends State<WishlistScreen>
   }
 
   AppBar _buildAppBar() {
-    return AppBar(
-      title: _showSearch
-          ? TextField(
-              controller: _searchController,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: 'Search your wishlist...',
-                border: InputBorder.none,
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-              ),
-              style: const TextStyle(color: Colors.white),
-              onChanged: _filterItems,
-            )
-          : const Text('Your Lists'),
-      actions: [
-        IconButton(
-          icon: Icon(_showSearch ? Icons.close : Icons.search),
-          onPressed: () {
-            setState(() {
-              _showSearch = !_showSearch;
-              if (!_showSearch) {
-                _searchController.clear();
-                _filterItems('');
-              }
-            });
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.shopping_cart),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Cart functionality would open here'),
-                duration: Duration(seconds: 1),
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: 8),
-      ],
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Your Lists'),
-          Tab(text: 'Your Friends'),
-        ],
-        indicatorColor: Colors.white,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.white.withOpacity(0.7),
+  return AppBar(
+    title: _showSearch
+        ? TextField(
+            controller: _searchController,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Search your wishlist...',
+              border: InputBorder.none,
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+            ),
+            style: const TextStyle(color: Colors.white),
+            onChanged: _filterItems,
+          )
+        : const Text('Your Lists'),
+    actions: [
+      IconButton(
+        icon: Icon(_showSearch ? Icons.close : Icons.search),
+        onPressed: () {
+          setState(() {
+            _showSearch = !_showSearch;
+            if (!_showSearch) {
+              _searchController.clear();
+              _filterItems('');
+            }
+          });
+        },
       ),
-    );
-  }
+      IconButton(
+        icon: const Icon(Icons.shopping_cart),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CartPage()),
+          );
+        },
+      ),
+      const SizedBox(width: 8),
+    ],
+    bottom: TabBar(
+      controller: _tabController,
+      tabs: const [
+        Tab(text: 'Your Lists'),
+        Tab(text: 'Your Friends'),
+      ],
+      indicatorColor: Colors.white,
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.white.withOpacity(0.7),
+    ),
+  );
+}
 
   Widget _buildCreateListButton() {
     return Padding(

@@ -1,15 +1,16 @@
+import 'package:app_1/user_account.dart';
 import 'package:flutter/material.dart';
 
 class CategoryDrawer extends StatelessWidget {
   final String selectedCategory;
   final Function(String) onCategorySelected;
-  final VoidCallback onLogout; // Add this callback for logout functionality
+  final VoidCallback onLogout;
   
-   CategoryDrawer({
+  CategoryDrawer({
     super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
-    required this.onLogout, // Make it required
+    required this.onLogout,
   });
 
   final Map<String, List<String>> _categories = {
@@ -82,10 +83,18 @@ class CategoryDrawer extends StatelessWidget {
                 }).toList(),
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
                   onTap: () {
-                    onCategorySelected('Settings');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AccountPage(
+                          changeThemeMode: (mode) {}, // Optional placeholder
+                          currentThemeMode: ThemeMode.system,
+                        ),
+                      ),
+                    );
                   },
                 ),
                 ListTile(
@@ -98,62 +107,68 @@ class CategoryDrawer extends StatelessWidget {
               ],
             ),
           ),
+          
           // Logout button at the bottom
           Container(
-  decoration: BoxDecoration(
-    border: Border(
-      top: BorderSide(
-        color: Colors.grey.shade200,
-        width: 1.0,
-      ),
-    ),
-  ),
-  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-  child: Column(
-    children: [
-      // Horizontal divider (optional)
-      const Divider(height: 1, color: Colors.grey),
-      const SizedBox(height: 16),
-      
-      // Logout button
-      SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
-          icon: const Icon(Icons.logout, size: 20),
-          label: const Text(
-            'LOG OUT',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.grey.shade200,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            child: Column(
+              children: [
+                const Divider(height: 1, color: Colors.grey),
+                const SizedBox(height: 16),
+                
+                // Logout button
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.logout, size: 20),
+                    label: const Text(
+                      'LOG OUT',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red.shade700,
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: Colors.red.shade700),
+                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () {
+                      // Close the drawer first
+                      Navigator.pop(context);
+                      // Then perform logout action
+                      onLogout();
+                      // Navigate to login page with replacement (so user can't go back)
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                Text(
+                  'App Version 1.0.0',
+                  style: TextStyle(
+                    color: Colors.grey.shade500,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.red.shade700,
-            backgroundColor: Colors.transparent,
-            side: BorderSide(color: Colors.red.shade700),
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            elevation: 0,
-          ),
-          onPressed: onLogout,
-        ),
-      ),
-      
-      // Optional: Additional footer text
-      const SizedBox(height: 12),
-      Text(
-        'App Version 1.0.0',
-        style: TextStyle(
-          color: Colors.grey.shade500,
-          fontSize: 12,
-        ),
-      ),
-    ],
-  ),
-),
-          const SizedBox(height: 16), // Add some space at the bottom
+          const SizedBox(height: 16),
         ],
       ),
     );

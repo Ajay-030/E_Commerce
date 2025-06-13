@@ -25,6 +25,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
       home: const FrontPage(),
+      // Define named routes for easier navigation
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const HomePage(),
+        '/signup': (context) => const SignUpPage(),
+      },
     );
   }
 }
@@ -43,13 +49,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+      // Using pushReplacementNamed to navigate to home page
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                           const Text("Don't have an account?"),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpPage(),
-                                ),
-                              );
+                              // Using named route for signup
+                              Navigator.pushNamed(context, '/signup');
                             },
                             child: const Text(
                               "Sign Up",
@@ -184,8 +183,8 @@ class _LoginPageState extends State<LoginPage> {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(16),
         ),
-      validator: validator,
-     ),
-);
-}
+        validator: validator,
+      ),
+    );
+  }
 }
