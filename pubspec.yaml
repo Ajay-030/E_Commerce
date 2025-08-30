@@ -1,6 +1,6 @@
 name: app_1
-description: A new Flutter project.
-publish_to: 'none' # Remove or replace with a URL if publishing
+description: A Flutter e-commerce application with admin features.
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -32,6 +32,7 @@ dependencies:
   dio: ^5.3.3
   cached_network_image: ^3.3.1
   fluttertoast: ^8.2.2
+  image_picker: ^1.0.4
 
   # State Management
   provider: ^6.1.1
@@ -78,3 +79,4 @@ flutter:
   assets:
     - assets/
     - assets/slide1.jpg
+    # Add any additional assets from the second config here

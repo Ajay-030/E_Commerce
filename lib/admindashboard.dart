@@ -1,16 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:app_1/AdminService.dart';
+import 'package:app_1/AdminShipping.dart';
+import 'package:app_1/OrderManagement/OrderDetailPage.dart';
+import 'package:app_1/OrderManagement/StatusUpdateDialog.dart';
+import 'package:app_1/ProductManagement/AddProductPage.dart';
+import 'package:app_1/ProductManagement/ProductListingPage.dart';
+import 'package:app_1/ServiceManagement/CategoryListPage.dart';
+import 'package:app_1/ServiceManagement/CustomerListPage.dart';
+import 'package:app_1/ServiceManagement/StockAlertsPage.dart';
+// import 'package:admin/AdminProducts.dart';
+import 'package:app_1/AdminOrders.dart';
+import 'package:app_1/AdminCustomers.dart';
+import 'package:app_1/ShopSettings.dart';
+import 'package:app_1/AdminFAQ.dart';
+import 'package:app_1/Shopsettings/SizeSettingsPage.dart';
+import 'package:app_1/Shopsettings/ColorSettingsPage.dart';
+import 'package:app_1/Shopsettings/CategorySettingsPage.dart';
+import 'package:app_1/Shopsettings/ShippingSettingsPage.dart';
+import 'package:app_1/Settings/Settings.dart';
 
-class AdminApp extends StatelessWidget {
-  const AdminApp({super.key});
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Admin Dashboard',
+      title: 'Admin Dashboard Pro',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.deepPurple),
+        scaffoldBackgroundColor: Colors.grey[50],
+        cardTheme: CardThemeData( // Updated to CardThemeData
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       ),
       home: const DashboardScreen(),
       debugShowCheckedModeBanner: false,
@@ -18,149 +47,522 @@ class AdminApp extends StatelessWidget {
   }
 }
 
-// ------------------- Dashboard Screen -------------------
-
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _currentPageIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  final List<Widget> _pages = const [
+    OverviewPage(),
+    ShopSettingsPage(),
+    ProductManagementPage(),
+    ProjectManagementApp(),
+    ServicesApp(),
+    FAQApp(),
+    ShippingManagementApp(),
+    CustomerPage(),
+    ProductListingPage(products: []),
+    OrderDetailPage(),
+    SettingsPage(),
+  ];
+
+  void _onDrawerOptionSelected(int index) {
+    setState(() {
+      _currentPageIndex = index;
+      _isSearching = false;
+    });
+    Navigator.pop(context);
+  }
+
+  void _onLogout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to logout?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Logged out successfully")),
+              );
+            },
+            child: const Text("Logout", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getAppBarTitle() {
+    switch (_currentPageIndex) {
+      case 0:
+        return "Dashboard";
+      case 1:
+        return "Shop Settings";
+      case 2:
+        return "Add Product";
+      case 3:
+        return "Project Management";
+      case 4:
+        return "Services";
+      case 5:
+        return "FAQ";
+      case 6:
+        return "Shipping Management";
+      case 7:
+        return "Customer Page";
+      case 8:
+        return "Product Listing";
+      case 9:
+        return "Order Details";
+      case 10:
+        return "Settings";
+      default:
+        return "Admin Dashboard";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DrawerMenu(),
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-      ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
+      appBar: _buildAppBar(),
+      drawer: _buildDrawer(),
+      body: _pages[_currentPageIndex],
+      floatingActionButton: _currentPageIndex == 0 ? _buildQuickActionButton() : null,
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: _currentPageIndex == 0 && !_isSearching
+          ? const Text("Dashboard")
+          : _isSearching
+              ? _buildSearchField()
+              : Text(_getAppBarTitle()),
+      backgroundColor: Colors.deepPurple,
+      foregroundColor: Colors.white,
+      actions: [
+        if (_currentPageIndex == 0) _buildSearchIcon(),
+        if (!_isSearching) ...[
+          _buildNotificationsButton(),
+          _buildProfileButton(),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildQuickActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => SizedBox(
+            height: 200,
+            child: Column(
               children: [
-                InfoCard(
-                  title: 'Orders',
-                  value: '152',
-                  icon: Icons.shopping_cart,
-                  color: Colors.deepPurple,
+                ListTile(
+                  leading: const Icon(Icons.add),
+                  title: const Text('Add Product'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _onDrawerOptionSelected(2);
+                  },
                 ),
-                InfoCard(
-                  title: 'Revenue',
-                  value: '\$24.3K',
-                  icon: Icons.attach_money,
-                  color: Colors.green,
+                ListTile(
+                  leading: const Icon(Icons.assignment),
+                  title: const Text('Create Order'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _onDrawerOptionSelected(9);
+                  },
                 ),
-                InfoCard(
-                  title: 'Customers',
-                  value: '1.2K',
-                  icon: Icons.people,
-                  color: Colors.orange,
-                ),
-                InfoCard(
-                  title: 'Products',
-                  value: '320',
-                  icon: Icons.inventory,
-                  color: Colors.blue,
+                ListTile(
+                  leading: const Icon(Icons.person_add),
+                  title: const Text('Add Customer'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _onDrawerOptionSelected(7);
+                  },
                 ),
               ],
             ),
-            SizedBox(height: 24),
-            ChartPlaceholder(),
-            SizedBox(height: 24),
-            PieChartPlaceholder(),
+          ),
+        );
+      },
+      child: const Icon(Icons.add),
+    );
+  }
+
+  Widget _buildSearchIcon() {
+    return IconButton(
+      icon: const Icon(Icons.search),
+      onPressed: () {
+        setState(() {
+          _isSearching = true;
+        });
+      },
+    );
+  }
+
+  Widget _buildSearchField() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: TextField(
+        controller: _searchController,
+        autofocus: true,
+        decoration: InputDecoration(
+          hintText: "Search...",
+          hintStyle: const TextStyle(color: Colors.white70),
+          border: InputBorder.none,
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              setState(() {
+                _isSearching = false;
+                _searchController.clear();
+              });
+            },
+          ),
+        ),
+        style: const TextStyle(color: Colors.white),
+        onChanged: (value) {
+          // Implement search functionality
+        },
+        onSubmitted: (value) {
+          // Handle search submission
+        },
+      ),
+    );
+  }
+
+  Widget _buildNotificationsButton() {
+    return Stack(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: () {
+            _showNotificationsDialog();
+          },
+        ),
+        Positioned(
+          right: 8,
+          top: 8,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            constraints: const BoxConstraints(
+              minWidth: 16,
+              minHeight: 16,
+            ),
+            child: const Text(
+              '3',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showNotificationsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Notifications (3)'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              _buildNotificationItem('New order received', '5 min ago', Icons.shopping_cart),
+              _buildNotificationItem('Low stock alert', '2 hours ago', Icons.warning),
+              _buildNotificationItem('System update available', '1 day ago', Icons.system_update),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Dismiss All'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationItem(String title, String time, IconData icon) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.deepPurple),
+      title: Text(title),
+      subtitle: Text(time),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        // Handle notification tap
+      },
+    );
+  }
+
+  Widget _buildProfileButton() {
+    return PopupMenuButton<String>(
+      icon: const CircleAvatar(
+        radius: 16,
+        backgroundImage: NetworkImage('https://randomuser.me/api/portraits/men/1.jpg'),
+      ),
+      onSelected: (value) {
+        if (value == 'profile') {
+          _showProfileDialog(context);
+        } else if (value == 'logout') {
+          _onLogout();
+        }
+      },
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'profile',
+          child: Text('My Profile'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'logout',
+          child: Text('Logout'),
+        ),
+      ],
+    );
+  }
+
+  void _showProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Admin Profile"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage('https://randomuser.me/api/portraits/men/1.jpg'),
+            ),
+            const SizedBox(height: 16),
+            const Text("Admin User", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text("admin@kurzonetextile.com"),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text("Close"),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-// ------------------- Drawer Menu -------------------
-
-class DrawerMenu extends StatelessWidget {
-  const DrawerMenu({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildDrawer() {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.deepPurple),
-            child: Text(
-              'Admin Panel',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-          ),
+          const DrawerHeaderWidget(),
+          _buildDrawerItem(Icons.dashboard, 'Dashboard', 0),
+          _buildExpansionTile('Shop Settings', [
+            _buildDrawerSubItem('Size', Icons.straighten, SizeSettingsPage()),
+            _buildDrawerSubItem('Color', Icons.color_lens, ColorSettingsPage()),
+            _buildDrawerSubItem('Shipping Partner', Icons.local_shipping, ShippingSettingsPage()),
+            _buildDrawerSubItem('Category', Icons.category, CategorySettingsPage()),
+          ]),
+          _buildExpansionTile('Product Management', [
+            _buildDrawerSubItem('Add Product', Icons.upload_file, ProductManagementPage()),
+            _buildDrawerSubItem('Product Listing', Icons.view_list, ProductListingPage(products: [])),
+          ]),
+          _buildExpansionTile('Order Management', [
+            _buildDrawerSubItem('Order Detail', Icons.upload_file, OrderDetailPage()),
+            _buildDrawerSubItem('Order List Page', Icons.assignment_outlined, OrderListPage()),
+            _buildDrawerSubItem('Shipping Management', Icons.info_outline, ShippingManagementPage()),
+            _buildDrawerSubItem('Status Update', Icons.edit_note, StatusUpdateDialog()),
+          ]),
+          _buildExpansionTile('Services', [
+            _buildDrawerSubItem('Category List', Icons.upload_file, CategoryListPage()),
+            _buildDrawerSubItem('Customer List', Icons.assignment_outlined, CustomerListPage()),
+            _buildDrawerSubItem('Order List', Icons.info_outline, OrderListPage()),
+            _buildDrawerSubItem('Stock Alerts', Icons.edit_note, StockAlertsPage()),
+          ]),
+          _buildDrawerItem(Icons.question_answer, 'FAQ', 5),
+          _buildDrawerItem(Icons.local_shipping, 'Shipping', 6),
+          _buildDrawerItem(Icons.person_add, 'Register Customer', 7),
+          _buildDrawerItem(Icons.settings, 'Settings', 10),
+          const Divider(),
           ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Orders'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.store),
-            title: const Text('Products'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: const Text('Customers'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.bar_chart),
-            title: const Text('Reports'),
-            onTap: () => Navigator.pop(context),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            onTap: _onLogout,
           ),
         ],
       ),
     );
   }
+
+  ListTile _buildDrawerItem(IconData icon, String title, int index) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      selected: _currentPageIndex == index,
+      selectedTileColor: Colors.deepPurple.withOpacity(0.1),
+      onTap: () => _onDrawerOptionSelected(index),
+    );
+  }
+
+  ExpansionTile _buildExpansionTile(String title, List<Widget> children) {
+    return ExpansionTile(
+      leading: const Icon(Icons.settings),
+      title: Text(title),
+      initiallyExpanded: _currentPageIndex == 1,
+      children: children,
+    );
+  }
+
+  ListTile _buildDrawerSubItem(String title, IconData icon, Widget page) {
+    return ListTile(
+      title: Text(title),
+      leading: Icon(icon, size: 20),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+    );
+  }
 }
 
-// ------------------- Info Card -------------------
+// ---------------------- Overview Page ----------------------
 
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
+class OverviewPage extends StatelessWidget {
+  const OverviewPage({super.key});
 
-  const InfoCard({
-    super.key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
+  Widget _buildStatCard(String title, String value, String change, Color bgColor, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [bgColor.withOpacity(0.9), bgColor.withOpacity(0.6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      width: 160,
+      height: 100,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(change, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+              Icon(icon, color: Colors.white70, size: 16),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width / 2 - 24;
-    if (MediaQuery.of(context).size.width < 600) cardWidth = double.infinity;
+    final statCards = [
+      _buildStatCard("Revenue", "\u20B91,20,000", "+10.2%", Colors.deepPurple, Icons.currency_rupee),
+      _buildStatCard("Orders", "1,254", "+3.1%", Colors.black87, Icons.shopping_cart),
+      _buildStatCard("Customers", "804", "+5.6%", Colors.deepPurple, Icons.people),
+      _buildStatCard("Returns", "31", "-0.9%", Colors.black87, Icons.undo),
+    ];
 
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: statCards,
+          ),
+          const SizedBox(height: 20),
+          _buildChartContainer("User   Growth", const LineChartSample()),
+          const SizedBox(height: 20),
+          _buildChartContainer("Device Traffic", const BarChartSample()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChartContainer(String title, Widget chart) {
     return Container(
-      width: cardWidth,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(color: color, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+          SizedBox(height: 180, child: chart),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------- Line Chart ----------------------
+
+class LineChartSample extends StatelessWidget {
+  const LineChartSample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return LineChart(
+      LineChartData(
+        lineBarsData: [
+          LineChartBarData(
+            spots: const [
+              FlSpot(0, 1),
+              FlSpot(1, 2),
+              FlSpot(2, 1.8),
+              FlSpot(3, 2.5),
+              FlSpot(4, 2.2),
+              FlSpot(5, 3),
+            ],
+            isCurved: true,
+            barWidth: 3,
+            color: Colors.deepPurple,
+            dotData: FlDotData(show: true),
           ),
         ],
       ),
@@ -168,107 +570,49 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-// ------------------- Line Chart -------------------
+// ---------------------- Bar Chart ----------------------
 
-class ChartPlaceholder extends StatelessWidget {
-  const ChartPlaceholder({super.key});
+class BarChartSample extends StatelessWidget {
+  const BarChartSample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey.shade300)],
-      ),
-      padding: const EdgeInsets.all(16),
-      child: LineChart(
-        LineChartData(
-          borderData: FlBorderData(show: false),
-          titlesData: const FlTitlesData(show: true),
-          lineBarsData: [
-            LineChartBarData(
-              spots: [
-                const FlSpot(1, 100),
-                const FlSpot(2, 150),
-                const FlSpot(3, 130),
-                const FlSpot(4, 170),
-                const FlSpot(5, 200),
-              ],
-              isCurved: true,
-              barWidth: 3,
-              color: Colors.deepPurple,
-              belowBarData: BarAreaData(show: false),
-            ),
-          ],
-        ),
+    return BarChart(
+      BarChartData(
+        barGroups: List.generate(6, (i) => BarChartGroupData(x: i, barRods: [
+          BarChartRodData(
+            toY: (10 + i * 2).toDouble(),
+            color: i == 2 ? Colors.deepPurple : Colors.grey.shade400,
+            width: 18,
+            borderRadius: BorderRadius.circular(4),
+          )
+        ])),
       ),
     );
   }
 }
 
-// ------------------- Pie Chart -------------------
+// ---------------------- Drawer Header ----------------------
 
-class PieChartPlaceholder extends StatelessWidget {
-  const PieChartPlaceholder({super.key});
+class DrawerHeaderWidget extends StatelessWidget {
+  const DrawerHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey.shade300)],
-      ),
-      padding: const EdgeInsets.all(16),
-      child: PieChart(
-        PieChartData(
-          sections: [
-            PieChartSectionData(
-              color: Colors.orange,
-              value: 50,
-              title: 'Direct',
-              radius: 70,
-              titleStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-              titlePositionPercentageOffset: 0.6,
-            ),
-            PieChartSectionData(
-              color: Colors.green,
-              value: 5.4,
-              title: 'Referral',
-              radius: 70,
-              titleStyle: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                
-              ),
-              titlePositionPercentageOffset: 0.8,
-            ),
-            PieChartSectionData(
-              color: Colors.blue,
-              value: 44.6,
-              title: 'Organic',
-              radius: 70,
-              titleStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-              titlePositionPercentageOffset: 0.6,
-            ),
-          ],
-          sectionsSpace: 2,
-          centerSpaceRadius: 40,
-        ),
+    return DrawerHeader(
+      decoration: const BoxDecoration(color: Colors.deepPurple),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          CircleAvatar(
+            radius: 28,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.store, size: 30, color: Colors.deepPurple),
+          ),
+          SizedBox(height: 10),
+          Text("Admin", style: TextStyle(color: Colors.white, fontSize: 18)),
+          Text("KurZonetextile@shop.com", style: TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
       ),
     );
   }

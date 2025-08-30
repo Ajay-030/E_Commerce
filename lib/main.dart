@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:app_1/Admindashboard.dart'; // Admin dashboard import
 import 'HomePage.dart';
 import 'SignUpPage.dart';
 import 'FrontPage.dart';
@@ -10,26 +10,30 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => CartModel(),
-      child: const MyApp(),
+      child: const TextileApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TextileApp extends StatelessWidget {
+  const TextileApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'E-Commerce Login',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      title: 'Textile E-Commerce & Admin',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       debugShowCheckedModeBanner: false,
-      home: const FrontPage(),
-      // Define named routes for easier navigation
+      home: const FrontPage(), // Default to user-facing front page
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/signup': (context) => const SignUpPage(),
+        '/admin': (context) => const DashboardScreen(), // Admin dashboard route
       },
     );
   }
@@ -46,11 +50,15 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isAdminLogin = false;
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      // Using pushReplacementNamed to navigate to home page
-      Navigator.pushReplacementNamed(context, '/home');
+      if (_isAdminLogin) {
+        Navigator.pushReplacementNamed(context, '/admin');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     }
   }
 
@@ -86,6 +94,22 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("User Login"),
+                    Switch(
+                      value: _isAdminLogin,
+                      onChanged: (value) {
+                        setState(() {
+                          _isAdminLogin = value;
+                        });
+                      },
+                    ),
+                    const Text("Admin Login"),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -126,9 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        child: Text(
+                          _isAdminLogin ? 'Login as Admin' : 'Login as User',
+                          style: const TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -138,7 +162,6 @@ class _LoginPageState extends State<LoginPage> {
                           const Text("Don't have an account?"),
                           TextButton(
                             onPressed: () {
-                              // Using named route for signup
                               Navigator.pushNamed(context, '/signup');
                             },
                             child: const Text(

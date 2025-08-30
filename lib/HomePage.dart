@@ -8,6 +8,7 @@ import 'checkout_page.dart';
 import 'user_account.dart';
 import 'wishlist_page.dart' hide MyShopApp;
 import 'category_drawer.dart';
+
 void main() => runApp(const ECommerceApp());
 
 class ECommerceApp extends StatelessWidget {

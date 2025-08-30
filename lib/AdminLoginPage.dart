@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'admindashboard.dart'; // Make sure this is the correct relative path
+ // Make sure this is the correct relative path
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -21,10 +21,10 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           context,
         ).showSnackBar(const SnackBar(content: Text('Admin login successful')));
         // ✅ Navigate to dashboard
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const DashboardScreen()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //    MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid admin credentials')),
